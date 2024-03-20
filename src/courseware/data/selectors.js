@@ -17,3 +17,5 @@ export const getCourseOutline = state => state.courseware.courseOutline;
 export const getCourseOutlineStatus = state => state.courseware.courseOutlineStatus;
 
 export const getCoursewareOutlineSidebarSettings = state => state.courseware.courseOutlineSidebarSettings;
+
+export const getDiscussionsSidebarSettings = state => state.courseware.discussionsSidebarSettings;
