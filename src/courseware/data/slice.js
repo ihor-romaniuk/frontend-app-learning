@@ -69,6 +69,32 @@ const slice = createSlice({
     setDiscussionsSidebarSettings: (state, { payload }) => {
       state.discussionsSidebarSettings = payload;
     },
+    updateCourseOutlineCompletion: (state, { payload }) => {
+      const { sequenceId, unitId, isComplete: isUnitComplete } = payload;
+      if (!isUnitComplete) {
+        return state;
+      }
+
+      state.courseOutline.units[unitId].complete = true;
+
+      const sequenceUnits = state.courseOutline.sequences[sequenceId].unitIds;
+      const isAllUnitsAreComplete = sequenceUnits.every((id) => state.courseOutline.units[id].complete);
+
+      if (isAllUnitsAreComplete) {
+        state.courseOutline.sequences[sequenceId].complete = true;
+      }
+
+      const sectionId = Object.keys(state.courseOutline.sections)
+        .find(section => state.courseOutline.sections[section].sequenceIds.includes(sequenceId));
+      const sectionSequences = state.courseOutline.sections[sectionId].sequenceIds;
+      const isAllSequencesAreComplete = sectionSequences.every((id) => state.courseOutline.sequences[id].complete);
+
+      if (isAllSequencesAreComplete) {
+        state.courseOutline.sections[sectionId].complete = true;
+      }
+
+      return state;
+    },
   },
 });
 
@@ -87,6 +113,7 @@ export const {
   fetchCourseOutlineSuccess,
   fetchCourseOutlineFailure,
   setCoursewareOutlineSidebarSettings,
+  updateCourseOutlineCompletion,
   setDiscussionsSidebarSettings,
 } = slice.actions;
 
